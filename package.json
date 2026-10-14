@@ -12,7 +12,8 @@
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit -p tsconfig.app.json",
     "verify:ui": "node scripts/verify-ui.mjs",
-    "shots": "node scripts/capture-shots.mjs"
+    "shots": "node scripts/capture-shots.mjs",
+    "social": "node scripts/compose-social.mjs"
   },
   "dependencies": {
     "@fontsource-variable/geist": "^5.3.0",

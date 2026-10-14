@@ -28,6 +28,35 @@ drawn, mocked or edited.
 | `mobile-result.png` | 390 × 844 | The result panel on a phone | A second mobile frame |
 | `mobile-full.png` | 390 × 844, full page | The entire page at phone width | Showing the whole flow in one tall image |
 
+## Element captures
+
+Screenshots of a single element rather than a viewport. A composition that
+crops a viewport image risks cutting through a label, and a panel that runs
+below the fold is simply not in the image — both happened while building the
+compositions below. Capturing the element removes the arithmetic and the
+risk.
+
+| File | Shows |
+|---|---|
+| `panel-result.png` | The result panel, whole |
+| `panel-discount.png` | The discount panel at 45% off, ending in "This loses money" |
+| `panel-scenarios.png` | The three-margin table, whole |
+
+## Composed images
+
+`composed/` holds the four finished 1080 × 1350 (4:5) images, built by
+`npm run social` from `scripts/compose-social.mjs`.
+
+| File | What it is |
+|---|---|
+| `1-cover.png` | Project cover: name, category, value line, real screen bleeding off the bottom |
+| `2-desktop-and-mobile.png` | Desktop and phone captures together |
+| `3-features.png` | The four questions, with the discount panel that proves question 03 |
+| `4-the-rule.png` | The rounding rule, with the real `ceilToCent` source |
+
+Every screenshot inside them is placed, never regenerated: no text, number,
+button or feature is altered anywhere.
+
 ## Still missing
 
 - **An Open Graph image** (1200 × 630). Needs to be composed, not captured.

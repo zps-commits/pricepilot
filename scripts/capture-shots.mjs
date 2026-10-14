@@ -68,5 +68,37 @@ await shot('mobile-result', {
 
 await shot('mobile-full', { width: 390, height: 844, fullPage: true });
 
+/*
+ * Element captures.
+ *
+ * A composition that crops a viewport screenshot risks cutting through a
+ * label, and a panel that runs below the fold is simply not in the image.
+ * Screenshotting the element itself removes both problems: the capture is
+ * exactly the panel, so a layout can place it without any crop arithmetic.
+ */
+async function element(name, selector, { width = 1440, height = 900, prepare } = {}) {
+  const context = await browser.newContext({
+    viewport: { width, height },
+    deviceScaleFactor: 2,
+  });
+  const page = await context.newPage();
+  await page.goto(URL, { waitUntil: 'networkidle' });
+  if (prepare) await prepare(page);
+  await page.waitForTimeout(150);
+  await page.locator(selector).first().screenshot({ path: `${OUT}/${name}.png` });
+  await context.close();
+  taken.push(`${OUT}/${name}.png  element: ${selector}`);
+}
+
+await element('panel-result', 'section.panel:has([data-testid="suggested-price"])');
+
+await element('panel-discount', 'section.panel:has(input[type=range])', {
+  async prepare(page) {
+    await page.locator('input[type=range]').fill('45');
+  },
+});
+
+await element('panel-scenarios', 'section.panel:has(table)');
+
 await browser.close();
 console.log(taken.join('\n'));
