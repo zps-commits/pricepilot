@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { render, screen, within } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from '@/App';
 import { resetHistoryStore } from '@/lib/historyStore';
@@ -122,6 +122,45 @@ describe('the history', () => {
     expect(screen.getByRole('button', { name: 'Save this calculation' })).toBeDisabled();
   });
 
+  it('restores a saved calculation back into the form', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    await clearAndType(user, 'What are you pricing', 'Saved dish');
+    await clearAndType(user, 'Variable cost', '25');
+    await user.click(screen.getByRole('button', { name: 'Save this calculation' }));
+
+    // Move everything away from what was saved.
+    await clearAndType(user, 'Variable cost', '99');
+    await clearAndType(user, 'Net margin you want', '10');
+    expect(screen.getByTestId('suggested-price')).not.toHaveTextContent('70,00');
+
+    const entry = screen.getAllByRole('listitem')[0]!;
+    await user.click(within(entry).getByRole('button', { name: 'Restore' }));
+
+    expect(screen.getByLabelText('Variable cost')).toHaveValue('25.00');
+    expect(screen.getByLabelText('Net margin you want')).toHaveValue('30');
+    expect(screen.getByLabelText('What are you pricing')).toHaveValue('Saved dish');
+    // C = 25.00 + 8.00 + 2.00 = 35.00; rates 20%, margin 30% -> 35 / 0.5.
+    expect(screen.getByTestId('suggested-price')).toHaveTextContent('70,00');
+  });
+
+  it('restoring resets the discount, which belonged to the old figures', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    await user.click(screen.getByRole('button', { name: 'Save this calculation' }));
+
+    const slider = screen.getByRole('slider', { name: 'Discount' });
+    await user.clear(screen.getByLabelText('Variable cost'));
+    await user.type(screen.getByLabelText('Variable cost'), '50');
+    // fireEvent is how a range input is moved; typing does not apply.
+    fireEvent.change(slider, { target: { value: '40' } });
+    expect(slider).toHaveValue('40');
+
+    const entry = screen.getAllByRole('listitem')[0]!;
+    await user.click(within(entry).getByRole('button', { name: 'Restore' }));
+    expect(slider).toHaveValue('0');
+  });
+
   it('says so when the browser refuses to store anything', () => {
     const getItem = vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
       throw new Error('denied');
@@ -132,6 +171,31 @@ describe('the history', () => {
     expect(screen.getByText(/not letting the page save anything/)).toBeInTheDocument();
 
     getItem.mockRestore();
+  });
+});
+
+describe('very large numbers', () => {
+  it('prices a cost in the billions without overflowing into nonsense', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    for (const label of ['Share of fixed costs', 'Other costs']) {
+      await clearAndType(user, label, '');
+    }
+    await clearAndType(user, 'Variable cost', '999999999');
+
+    // C = 999,999,999.00, rates 20%, margin 30% -> C / 0.5.
+    const price = screen.getByTestId('suggested-price').textContent ?? '';
+    expect(price).not.toMatch(/NaN|Infinity/);
+    expect(price.replace(/\D/g, '')).toBe('199999999800');
+  });
+
+  it('never prints NaN or Infinity anywhere on the page', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<App />);
+    await clearAndType(user, 'Variable cost', '99999999999999');
+    await clearAndType(user, 'Payment fee', '99.99');
+
+    expect(container.textContent).not.toMatch(/NaN|Infinity/);
   });
 });
 
