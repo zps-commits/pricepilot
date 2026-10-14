@@ -68,12 +68,14 @@ Measured on 2026-10-14, not assumed:
 - **0 axe-core violations**, WCAG 2.1 A + AA, at 1440 / 768 / 390 / 320px
 - No horizontal overflow and no console errors at those widths
 
-Not verified: real iOS and Android hardware, screen reader software, and any
-deployed instance.
+The same checks pass against the live deployment, not only a local build.
+
+Not verified: real iOS and Android hardware, and screen reader software.
 
 ## Status
 
-Source complete. **Not deployed** — no public URL is claimed.
+Live at **https://pricepilot-eta.vercel.app**, deployed 2026-10-14.
+The GitHub repository has not been created yet.
 
 ## Honesty notes for anyone reusing this summary
 

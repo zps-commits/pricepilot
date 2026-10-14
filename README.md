@@ -139,14 +139,23 @@ Measured on 2026-10-14, not assumed:
 | Console errors and warnings                          | none                                               |
 | Save, restore, export, delete, reload, clear         | all behave as described                            |
 
-Not verified: real iOS and Android hardware (emulated widths only), screen
-reader software, and any deployed instance.
+The same run passes against the live deployment:
+
+```bash
+VERIFY_URL=https://pricepilot-eta.vercel.app/ npm run verify:ui
+```
+
+Not verified: real iOS and Android hardware (emulated widths only) and screen
+reader software.
 
 ## Deployment
 
-Not deployed. The build output in `dist/` is a static site with no server
-side, so any static host will serve it; nothing is published yet and no URL
-is claimed.
+**Live: https://pricepilot-eta.vercel.app**
+
+The build output in `dist/` is a static site with no server side. Deployed to
+Vercel on 2026-10-14 and verified against that URL, not only against a local
+build — `npm run verify:ui` passes in full with `VERIFY_URL` pointed at
+production.
 
 ## Limitations
 

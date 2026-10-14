@@ -182,23 +182,26 @@ a failing application.
 
 Measured on 2026-10-14. These are verification results, not commercial ones.
 
-| Check | Result |
-|---|---|
-| Unit and component tests | 77 passing |
-| TypeScript, `strict` + `noUncheckedIndexedAccess` | passes |
-| Oxlint | passes |
-| Production build | passes |
-| axe-core, WCAG 2.1 A + AA, at 1440 / 768 / 390 / 320 | 0 violations |
-| Horizontal overflow at those widths | none |
-| Console errors and warnings | none |
-| Save, restore, export, delete, reload, clear | behave as described |
+| Check                                                | Result              |
+| ---------------------------------------------------- | ------------------- |
+| Unit and component tests                             | 77 passing          |
+| TypeScript, `strict` + `noUncheckedIndexedAccess`    | passes              |
+| Oxlint                                               | passes              |
+| Production build                                     | passes              |
+| axe-core, WCAG 2.1 A + AA, at 1440 / 768 / 390 / 320 | 0 violations        |
+| Horizontal overflow at those widths                  | none                |
+| Console errors and warnings                          | none                |
+| Save, restore, export, delete, reload, clear         | behave as described |
 
 The browser checks are a committed script, `npm run verify:ui`, not a
 one-off: four viewports for overflow, console noise and axe, then the
 behaviour only a browser can confirm.
 
-**Not verified:** real iOS and Android hardware (emulated widths only),
-screen reader software, and any deployed instance.
+The whole run also passes against the live deployment at
+https://pricepilot-eta.vercel.app, not only against a local build.
+
+**Not verified:** real iOS and Android hardware (emulated widths only) and
+screen reader software.
 
 ## Next steps
 
@@ -211,4 +214,3 @@ simulated:
 - Named tax presets per marketplace, which needs real, sourced rate data
   rather than numbers made up to look plausible.
 - Comparing two saved calculations side by side.
-- A deployed instance. Nothing is published yet.

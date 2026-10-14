@@ -1,8 +1,8 @@
 # LinkedIn — post in English
 
-> **Before posting:** the repository has not been created yet. Confirm the
-> real GitHub URL (and the deployment URL, if one exists) before posting. Do
-> not publish a link that does not exist.
+> **Before posting:** the deployment is live and verified (https://pricepilot-eta.vercel.app).
+> The GitHub repository **has not been created yet** — confirm the real URL
+> before posting, or drop that line. Do not publish a link that does not exist.
 
 ---
 
@@ -79,12 +79,14 @@ every run, not a one-off audit.
 violations (WCAG 2.1 A + AA) at 1440, 768, 390 and 320px, no horizontal
 overflow and no console errors.
 
-Not verified: real iOS and Android hardware, and screen reader software. Not
-deployed yet.
+The same figures hold against the live deployment, not only a local build.
+
+Not verified: real iOS and Android hardware, and screen reader software.
 
 Stack: React 19, TypeScript, Vite, Tailwind CSS v4, Vitest, Testing Library,
 Playwright + axe-core.
 
+Live: https://pricepilot-eta.vercel.app
 Code: [CONFIRM GITHUB URL BEFORE POSTING]
 
 If you price on top of a marketplace and want to compare notes, happy to talk.

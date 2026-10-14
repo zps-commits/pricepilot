@@ -1,7 +1,8 @@
 # Carousel — five slides
 
-> **Before publishing:** confirm the GitHub URL on slide 5. The repository
-> has not been created yet.
+> **Before publishing:** the deployment is live at https://pricepilot-eta.vercel.app.
+> The GitHub URL on slide 5 is still a placeholder — the repository has not
+> been created yet.
 
 Format: 1080 × 1350 (4:5). Light background, one accent, figures in a mono
 face, matching the application. No stock photography and no screenshot of an
@@ -83,6 +84,7 @@ React 19 · TypeScript strict · Vite · Tailwind CSS v4
 Money as integer cents. Prices round up, never down.
 77 tests. Zero axe-core violations at four screen widths.
 
+Try it: https://pricepilot-eta.vercel.app
 Code: [CONFIRM GITHUB URL]
 
 **Visual**

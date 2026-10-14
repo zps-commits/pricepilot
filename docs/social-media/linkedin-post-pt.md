@@ -1,8 +1,8 @@
 # LinkedIn — publicação em português
 
-> **Antes de publicar:** o repositório ainda não foi criado. Confirme a URL
-> real do GitHub (e do deploy, se houver) antes de postar. Não publique um
-> link que ainda não existe.
+> **Antes de publicar:** o deploy está no ar e verificado (https://pricepilot-eta.vercel.app).
+> O repositório no GitHub **ainda não foi criado** — confirme a URL real
+> antes de postar ou tire a linha. Não publique link que não existe.
 
 ---
 
@@ -77,12 +77,14 @@ auditoria de uma vez só.
 axe-core (WCAG 2.1 A + AA) em 1440, 768, 390 e 320px, sem overflow horizontal
 e sem erro de console.
 
-Não verificado: aparelho iOS/Android real e leitor de tela. Ainda não publiquei
-o deploy.
+Os mesmos números valem contra o deploy no ar, não só contra build local.
+
+Não verificado: aparelho iOS/Android real e leitor de tela.
 
 Stack: React 19, TypeScript, Vite, Tailwind CSS v4, Vitest, Testing Library,
 Playwright + axe-core.
 
+No ar: https://pricepilot-eta.vercel.app
 Código: [CONFIRMAR URL DO GITHUB ANTES DE POSTAR]
 
 Se você precifica em cima de marketplace e quer trocar ideia sobre isso, é só

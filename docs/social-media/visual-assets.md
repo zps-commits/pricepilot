@@ -4,6 +4,8 @@ Every file in `assets/` was captured from the running application — the
 production preview, not the dev server, so what is shown is what ships.
 Captured on 2026-10-14 at a device scale factor of 2.
 
+The same screens are live at https://pricepilot-eta.vercel.app.
+
 Re-capture them with:
 
 ```bash
