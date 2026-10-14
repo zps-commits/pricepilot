@@ -117,7 +117,6 @@ export function calculate(input: PricingInput): PricingResult | null {
 
 /** Applies a percentage discount and says what it does to the profit. */
 export function applyDiscount(
-  input: PricingInput,
   result: PricingResult,
   discountPct: number,
 ): DiscountResult | null {

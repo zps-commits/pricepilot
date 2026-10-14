@@ -186,7 +186,7 @@ describe('12. invalid percentages', () => {
 describe('13. a discount that still profits', () => {
   it('recalculates everything and reports the profit it cost', () => {
     const r = calculate(base)!;
-    const d = applyDiscount(base, r, 10)!;
+    const d = applyDiscount(r, 10)!;
     // 60.00 less 10% = 54.00; after 20% rates 43.20; less 30.00 cost = 13.20
     expect(d.finalPrice).toBe(5400);
     expect(d.revenueAfterRates).toBe(4320);
@@ -199,7 +199,7 @@ describe('13. a discount that still profits', () => {
 describe('14. a discount that loses money', () => {
   it('says so instead of showing a smaller profit', () => {
     const r = calculate(base)!;
-    const d = applyDiscount(base, r, 50)!;
+    const d = applyDiscount(r, 50)!;
     // 30.00 after discount; after rates 24.00; less 30.00 cost = -6.00
     expect(d.finalPrice).toBe(3000);
     expect(d.netProfit).toBe(-600);
@@ -209,7 +209,7 @@ describe('14. a discount that loses money', () => {
   it('identifies the exact discount that breaks even', () => {
     const r = calculate(base)!;
     // Break-even price is 37.50, which is 37.5% off 60.00.
-    const d = applyDiscount(base, r, 37.5)!;
+    const d = applyDiscount(r, 37.5)!;
     expect(d.finalPrice).toBe(3750);
     expect(d.netProfit).toBe(0);
     expect(d.outcome).toBe('break-even');
@@ -217,14 +217,14 @@ describe('14. a discount that loses money', () => {
 
   it('clamps a discount over 100% rather than paying the customer', () => {
     const r = calculate(base)!;
-    const d = applyDiscount(base, r, 150)!;
+    const d = applyDiscount(r, 150)!;
     expect(d.discountPct).toBe(100);
     expect(d.finalPrice).toBe(0);
   });
 
   it('ignores a discount that is not a number', () => {
     const r = calculate(base)!;
-    expect(applyDiscount(base, r, Number.NaN)).toBeNull();
+    expect(applyDiscount(r, Number.NaN)).toBeNull();
   });
 });
 
@@ -237,15 +237,15 @@ describe('15. scenarios', () => {
   });
 
   it('prices each one differently, with real numbers behind the labels', () => {
-    const prices = scenarios.map((s) => s.result.suggestedPrice);
-    expect(new Set(prices).size).toBe(3);
+    const [conservative, base_, aggressive] = scenarios.map((s) => s.result.suggestedPrice);
+    expect(new Set([conservative, base_, aggressive]).size).toBe(3);
     // A higher margin asks a higher price.
-    expect(prices[0]).toBeGreaterThan(prices[1]);
-    expect(prices[1]).toBeGreaterThan(prices[2]);
+    expect(conservative!).toBeGreaterThan(base_!);
+    expect(base_!).toBeGreaterThan(aggressive!);
   });
 
   it('keeps the base scenario identical to the main calculation', () => {
-    expect(scenarios[1].result.suggestedPrice).toBe(calculate(base)!.suggestedPrice);
+    expect(scenarios[1]!.result.suggestedPrice).toBe(calculate(base)!.suggestedPrice);
   });
 
   it('drops a scenario the rates make impossible rather than inventing one', () => {

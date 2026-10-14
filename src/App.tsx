@@ -1,122 +1,74 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import { useCallback, useState } from 'react';
+import CalculatorForm from '@/components/calculator/CalculatorForm';
+import ResultsPanel from '@/components/results/ResultsPanel';
+import { calculate, engineProblems } from '@/domain/pricing';
+import { formatMoney } from '@/lib/currency';
+import { DEFAULT_FORM, formErrors, hasCost, toPricingInput, type FormState } from '@/lib/form';
+import { t } from '@/lib/i18n';
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {
+  const [form, setForm] = useState<FormState>(DEFAULT_FORM);
+
+  const setField = useCallback(
+    <K extends keyof FormState>(name: K, value: FormState[K]) => {
+      setForm((current) => ({ ...current, [name]: value }));
+    },
+    [],
+  );
+
+  // Derived on every render rather than stored. The whole calculation is a few
+  // divisions; caching it would only add a way for it to go stale.
+  const errors = formErrors(form);
+  const input = toPricingInput(form);
+  const priceable = Object.keys(errors).length === 0 && hasCost(form);
+  const problems = Object.keys(errors).length === 0 ? engineProblems(input) : [];
+  const result = priceable && problems.length === 0 ? calculate(input) : null;
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
+    <div className="min-h-dvh">
+      <header className="border-b border-line bg-surface">
+        <div className="mx-auto max-w-5xl px-5 py-6 sm:px-8">
+          <h1 className="text-lg font-semibold tracking-tight">{t.appName}</h1>
+          <p className="mt-1 max-w-prose text-sm text-muted">{t.tagline}</p>
         </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
+      </header>
+
+      {/* Bottom padding reserves room for the mobile price bar. */}
+      <main className="mx-auto max-w-5xl px-5 pb-28 pt-8 sm:px-8 lg:pb-16">
+        <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-start lg:gap-10">
+          <CalculatorForm form={form} errors={errors} onChange={setField} />
+
+          <div className="lg:sticky lg:top-8">
+            <ResultsPanel
+              input={input}
+              result={result}
+              problems={problems}
+              priceable={priceable}
+            />
+          </div>
         </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
+
+        <p className="mt-10 max-w-prose text-xs leading-relaxed text-muted">{t.disclaimer}</p>
+      </main>
+
+      {/*
+        On a phone the form is taller than the screen, so the figure being
+        changed would otherwise be scrolled out of sight while typing.
+        aria-hidden: the results panel already announces the same value.
+      */}
+      {result ? (
+        <div
+          aria-hidden="true"
+          className="price-bar fixed inset-x-0 bottom-0 border-t border-line bg-surface/95 backdrop-blur-sm lg:hidden"
         >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
+          <div className="mx-auto flex max-w-5xl items-baseline justify-between gap-4 px-5 py-3.5 sm:px-8">
+            <span className="text-sm text-muted">{t.results.suggestedPrice}</span>
+            <span className="text-xl font-semibold text-accent">
+              {formatMoney(result.suggestedPrice, form.currency)}
+            </span>
+          </div>
         </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+      ) : null}
+    </div>
+  );
 }
-
-export default App
