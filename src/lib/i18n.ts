@@ -56,7 +56,13 @@ export const t = {
 
   scenarios: {
     legend: 'Three ways to price it',
-    hint: 'The same costs at three different margins.',
+    hint: 'The same costs at three different margins. Each row says which margin it asks for.',
+    names: {
+      conservative: 'Conservative',
+      base: 'Base',
+      aggressive: 'Aggressive',
+    },
+    current: 'Your margin',
     scenario: 'Scenario',
     margin: 'Margin',
     price: 'Price',

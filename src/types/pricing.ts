@@ -61,7 +61,6 @@ export type DiscountResult = {
 
 export type Scenario = {
   id: 'conservative' | 'base' | 'aggressive';
-  label: string;
   /** Stated in the table, so the comparison is never a label without a number. */
   marginPct: number;
   result: PricingResult;

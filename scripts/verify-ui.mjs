@@ -119,6 +119,24 @@ check(
 );
 log.push(`comma separator accepted: ${(await price()).trim()}`);
 
+/* The discount slider moves the final price and reports the outcome. */
+await variableCost.fill('20.00');
+await page.waitForTimeout(100);
+const slider = page.getByRole('slider', { name: 'Discount' });
+await slider.fill('40');
+await page.waitForTimeout(100);
+const outcome = await page.getByTestId('discount-outcome').innerText();
+check(/loses money/.test(outcome), `a 40% discount was not reported as a loss, got "${outcome}"`);
+await slider.fill('0');
+await page.waitForTimeout(100);
+log.push(`discount 40%: "${outcome}"`);
+
+/* Three scenarios, each with its own price. */
+const prices = await page.locator('table tbody tr td:nth-child(3)').allInnerTexts();
+check(prices.length === 3, `expected 3 scenarios, found ${prices.length}`);
+check(new Set(prices).size === 3, `scenarios share a price: ${prices.join(', ')}`);
+log.push(`scenarios: ${prices.join('  ')}`);
+
 /* Switching currency relabels. It must never change the amount. */
 await variableCost.fill('20.00');
 await page.waitForTimeout(100);

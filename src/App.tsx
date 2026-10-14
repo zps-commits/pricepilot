@@ -1,13 +1,18 @@
 import { useCallback, useState } from 'react';
 import CalculatorForm from '@/components/calculator/CalculatorForm';
+import DiscountControl from '@/components/results/DiscountControl';
 import ResultsPanel from '@/components/results/ResultsPanel';
-import { calculate, engineProblems } from '@/domain/pricing';
+import ScenarioTable from '@/components/scenarios/ScenarioTable';
+import { applyDiscount, buildScenarios, calculate, engineProblems } from '@/domain/pricing';
 import { formatMoney } from '@/lib/currency';
 import { DEFAULT_FORM, formErrors, hasCost, toPricingInput, type FormState } from '@/lib/form';
 import { t } from '@/lib/i18n';
 
 export default function App() {
   const [form, setForm] = useState<FormState>(DEFAULT_FORM);
+  /* Kept out of the form: a discount is a question about the result, not an
+     input to the price the tool recommends. */
+  const [discountPct, setDiscountPct] = useState(0);
 
   const setField = useCallback(
     <K extends keyof FormState>(name: K, value: FormState[K]) => {
@@ -23,6 +28,8 @@ export default function App() {
   const priceable = Object.keys(errors).length === 0 && hasCost(form);
   const problems = Object.keys(errors).length === 0 ? engineProblems(input) : [];
   const result = priceable && problems.length === 0 ? calculate(input) : null;
+  const discount = result ? applyDiscount(result, discountPct) : null;
+  const scenarios = result ? buildScenarios(input) : [];
 
   return (
     <div className="min-h-dvh">
@@ -38,15 +45,33 @@ export default function App() {
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-start lg:gap-10">
           <CalculatorForm form={form} errors={errors} onChange={setField} />
 
-          <div className="lg:sticky lg:top-8">
+          {/* Not sticky: with the discount panel the column is taller than a
+              short viewport, and a pinned column would put its own bottom out
+              of reach. */}
+          <div>
             <ResultsPanel
               input={input}
               result={result}
               problems={problems}
               priceable={priceable}
             />
+
+            {result ? (
+              <DiscountControl
+                value={discountPct}
+                onChange={setDiscountPct}
+                discount={discount}
+                currency={form.currency}
+              />
+            ) : null}
           </div>
         </div>
+
+        <ScenarioTable
+          scenarios={scenarios}
+          currency={form.currency}
+          currentMarginPct={input.desiredMarginPct}
+        />
 
         <p className="mt-10 max-w-prose text-xs leading-relaxed text-muted">{t.disclaimer}</p>
       </main>

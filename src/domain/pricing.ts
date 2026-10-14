@@ -151,17 +151,14 @@ export const SCENARIO_SHIFTS = { conservative: 5, base: 0, aggressive: -5 } as c
  * never a label without a number behind it.
  */
 export function buildScenarios(input: PricingInput): Scenario[] {
-  const defs: { id: Scenario['id']; label: string }[] = [
-    { id: 'conservative', label: 'Conservative' },
-    { id: 'base', label: 'Base' },
-    { id: 'aggressive', label: 'Aggressive' },
-  ];
+  const ids: Scenario['id'][] = ['conservative', 'base', 'aggressive'];
 
   const scenarios: Scenario[] = [];
-  for (const def of defs) {
-    const marginPct = Math.max(0, input.desiredMarginPct + SCENARIO_SHIFTS[def.id]);
+  for (const id of ids) {
+    const marginPct = Math.max(0, input.desiredMarginPct + SCENARIO_SHIFTS[id]);
     const result = calculate({ ...input, desiredMarginPct: marginPct });
-    if (result) scenarios.push({ id: def.id, label: def.label, marginPct, result });
+    // A scenario the rates make unsolvable is left out rather than shown empty.
+    if (result) scenarios.push({ id, marginPct, result });
   }
   return scenarios;
 }
