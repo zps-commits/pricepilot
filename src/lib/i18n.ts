@@ -72,7 +72,7 @@ export const t = {
   history: {
     legend: 'Saved calculations',
     save: 'Save this calculation',
-    namePrompt: 'Name',
+    untitled: 'Untitled',
     restore: 'Restore',
     remove: 'Delete',
     clear: 'Clear all',
@@ -82,7 +82,11 @@ export const t = {
     savedAt: 'Saved',
   },
 
-  csv: { export: 'Export CSV', failed: 'The file could not be prepared.' },
+  csv: {
+    export: 'Export CSV',
+    failed: 'The file could not be prepared. Your browser blocked the download.',
+    skipped: 'Rows the rates make unpriceable were left out of the file.',
+  },
 
   currency: { legend: 'Currency', hint: 'Relabels the figures. It does not convert between currencies.' },
 

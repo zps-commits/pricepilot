@@ -27,6 +27,27 @@ const VIEWPORTS = [
 
 const WCAG = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'];
 
+/* Seeded before the audit so the history panel is audited with rows in it,
+   not only in its empty state. */
+const SEEDED_HISTORY = [
+  {
+    id: 'seed-1',
+    savedAt: '2026-10-14T12:00:00.000Z',
+    name: 'Seeded example',
+    input: {
+      name: 'Seeded example',
+      currency: 'BRL',
+      variableCost: 2000,
+      fixedCostShare: 800,
+      otherCosts: 200,
+      paymentFeePct: 3,
+      commissionPct: 12,
+      otherTaxesPct: 5,
+      desiredMarginPct: 30,
+    },
+  },
+];
+
 const log = [];
 const failures = [];
 
@@ -53,6 +74,11 @@ for (const viewport of VIEWPORTS) {
   page.on('pageerror', (error) => noise.push(`pageerror: ${error.message}`));
 
   await page.goto(URL, { waitUntil: 'networkidle' });
+  await page.evaluate(
+    (seed) => window.localStorage.setItem('pricepilot.history.v1', JSON.stringify(seed)),
+    SEEDED_HISTORY,
+  );
+  await page.reload({ waitUntil: 'networkidle' });
 
   const overflow = await page.evaluate(
     () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
@@ -149,6 +175,59 @@ check(
   `switching currency changed the amount: ${inBrl} -> ${inUsd}`,
 );
 log.push(`currency relabels only: ${inBrl} / ${inUsd}`);
+
+/* History: save, restore, export, delete. */
+await page.getByLabel('What are you pricing').fill('Verified dish');
+await variableCost.fill('20.00');
+await page.waitForTimeout(100);
+await page.getByRole('button', { name: 'Save this calculation' }).click();
+await page.waitForTimeout(100);
+const saved = page.getByRole('listitem').filter({ hasText: 'Verified dish' });
+check((await saved.count()) === 1, 'the calculation was not saved to history');
+
+/* Restoring must put the saved figures back in the form. */
+await variableCost.fill('99.00');
+await page.waitForTimeout(100);
+await saved.getByRole('button', { name: 'Restore' }).click();
+await page.waitForTimeout(100);
+check(
+  (await variableCost.inputValue()) === '20.00',
+  `restore did not refill the form, found "${await variableCost.inputValue()}"`,
+);
+
+/* Export hands over a real file. */
+const [download] = await Promise.all([
+  page.waitForEvent('download', { timeout: 5000 }),
+  page.getByRole('button', { name: 'Export CSV' }).click(),
+]);
+const name = download.suggestedFilename();
+check(/^pricepilot-\d{4}-\d{2}-\d{2}\.csv$/.test(name), `unexpected export filename: ${name}`);
+log.push(`exported ${name}`);
+
+await saved.getByRole('button', { name: /^Delete/ }).click();
+await page.waitForTimeout(100);
+check((await saved.count()) === 0, 'the saved calculation was not deleted');
+log.push('history: saved, restored, exported, deleted');
+
+/* A reload must bring the history back. */
+await page.getByRole('button', { name: 'Save this calculation' }).click();
+await page.waitForTimeout(100);
+await page.reload({ waitUntil: 'networkidle' });
+check(
+  (await page.getByRole('listitem').count()) === 1,
+  'history did not survive a reload',
+);
+/* Clear all asks before it deletes, and deletes once confirmed. */
+page.once('dialog', (dialog) => dialog.dismiss());
+await page.getByRole('button', { name: 'Clear all' }).click();
+await page.waitForTimeout(100);
+check((await page.getByRole('listitem').count()) === 1, 'dismissing the prompt still cleared');
+
+page.once('dialog', (dialog) => dialog.accept());
+await page.getByRole('button', { name: 'Clear all' }).click();
+await page.waitForTimeout(100);
+check((await page.getByRole('listitem').count()) === 0, 'confirming the prompt did not clear');
+log.push('history survives a reload; clear all asks first');
 
 await context.close();
 

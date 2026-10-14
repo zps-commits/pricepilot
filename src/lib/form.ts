@@ -1,5 +1,5 @@
 import type { CurrencyCode, PricingInput } from '@/types/pricing';
-import { inputToCents, parsePercent } from '@/lib/currency';
+import { centsToInput, inputToCents, parsePercent } from '@/lib/currency';
 
 /**
  * The form holds raw strings, not numbers.
@@ -125,4 +125,19 @@ export function formErrors(form: FormState): Partial<Record<keyof FormState, str
 export function hasCost(form: FormState): boolean {
   const input = toPricingInput(form);
   return input.variableCost + input.fixedCostShare + input.otherCosts > 0;
+}
+
+/** Puts a saved calculation back into the form, exactly as it was priced. */
+export function fromPricingInput(input: PricingInput): FormState {
+  return {
+    name: input.name,
+    currency: input.currency,
+    variableCost: centsToInput(input.variableCost),
+    fixedCostShare: centsToInput(input.fixedCostShare),
+    otherCosts: centsToInput(input.otherCosts),
+    paymentFeePct: String(input.paymentFeePct),
+    commissionPct: String(input.commissionPct),
+    otherTaxesPct: String(input.otherTaxesPct),
+    desiredMarginPct: String(input.desiredMarginPct),
+  };
 }

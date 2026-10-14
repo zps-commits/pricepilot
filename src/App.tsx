@@ -1,18 +1,34 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import CalculatorForm from '@/components/calculator/CalculatorForm';
 import DiscountControl from '@/components/results/DiscountControl';
 import ResultsPanel from '@/components/results/ResultsPanel';
+import HistoryPanel from '@/components/history/HistoryPanel';
 import ScenarioTable from '@/components/scenarios/ScenarioTable';
 import { applyDiscount, buildScenarios, calculate, engineProblems } from '@/domain/pricing';
+import { buildCsv } from '@/domain/csv';
+import { downloadTextFile } from '@/lib/download';
+import { getSnapshot, saveEntry, startSync } from '@/lib/historyStore';
 import { formatMoney } from '@/lib/currency';
-import { DEFAULT_FORM, formErrors, hasCost, toPricingInput, type FormState } from '@/lib/form';
+import {
+  DEFAULT_FORM,
+  formErrors,
+  fromPricingInput,
+  hasCost,
+  toPricingInput,
+  type FormState,
+} from '@/lib/form';
 import { t } from '@/lib/i18n';
+import type { PricingInput } from '@/types/pricing';
 
 export default function App() {
   const [form, setForm] = useState<FormState>(DEFAULT_FORM);
   /* Kept out of the form: a discount is a question about the result, not an
      input to the price the tool recommends. */
   const [discountPct, setDiscountPct] = useState(0);
+  const [exportError, setExportError] = useState<string | null>(null);
+
+  /* Another tab saving or deleting a calculation should show up here too. */
+  useEffect(() => startSync(), []);
 
   const setField = useCallback(
     <K extends keyof FormState>(name: K, value: FormState[K]) => {
@@ -30,6 +46,24 @@ export default function App() {
   const result = priceable && problems.length === 0 ? calculate(input) : null;
   const discount = result ? applyDiscount(result, discountPct) : null;
   const scenarios = result ? buildScenarios(input) : [];
+
+  /* Reads the form from the closure, not from inside a state updater: React
+     may run an updater twice, and saving twice is not a harmless retry. */
+  const handleSave = useCallback(() => {
+    saveEntry(form.name.trim() || t.history.untitled, toPricingInput(form));
+  }, [form]);
+
+  const handleRestore = useCallback((saved: PricingInput) => {
+    setForm(fromPricingInput(saved));
+    setDiscountPct(0);
+  }, []);
+
+  const handleExport = useCallback(() => {
+    const { csv, rows } = buildCsv(getSnapshot().entries);
+    const stamp = new Date().toISOString().slice(0, 10);
+    const ok = rows > 0 && downloadTextFile(`pricepilot-${stamp}.csv`, csv, 'text/csv');
+    setExportError(ok ? null : t.csv.failed);
+  }, []);
 
   return (
     <div className="min-h-dvh">
@@ -71,6 +105,14 @@ export default function App() {
           scenarios={scenarios}
           currency={form.currency}
           currentMarginPct={input.desiredMarginPct}
+        />
+
+        <HistoryPanel
+          onSave={handleSave}
+          onRestore={handleRestore}
+          onExport={handleExport}
+          canSave={result !== null}
+          exportError={exportError}
         />
 
         <p className="mt-10 max-w-prose text-xs leading-relaxed text-muted">{t.disclaimer}</p>
