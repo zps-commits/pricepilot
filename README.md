@@ -4,12 +4,25 @@ A pricing calculator for anyone who sells something and needs to know what to
 charge once the payment fee, the marketplace commission and the rest have been
 taken off the top.
 
+![PricePilot on a desktop screen](docs/social-media/assets/desktop-result.png)
+
 It answers four questions:
 
 - What should I charge to end up with the margin I want?
 - What is the lowest price that does not lose money?
 - What happens to the profit if I discount it?
 - What would the same costs look like at a higher or lower margin?
+
+### Discounting it
+
+The slider recalculates the price, the profit and the margin, and says plainly
+when a discount has stopped making money.
+
+![A 45% discount turning the profit negative](docs/social-media/assets/desktop-discount-loss.png)
+
+### On a phone
+
+![PricePilot at 390px](docs/social-media/assets/mobile-form.png)
 
 ## The arithmetic
 
@@ -53,14 +66,15 @@ npm install
 npm run dev
 ```
 
-| Command             | What it does                     |
-| ------------------- | -------------------------------- |
-| `npm run dev`       | Development server               |
-| `npm run build`     | Type-check and build             |
-| `npm test`          | Unit and component tests         |
-| `npm run typecheck` | TypeScript, strict               |
-| `npm run lint`      | Oxlint                           |
-| `npm run verify:ui` | Browser verification — see below |
+| Command             | What it does                               |
+| ------------------- | ------------------------------------------ |
+| `npm run dev`       | Development server                         |
+| `npm run build`     | Type-check and build                       |
+| `npm test`          | Unit and component tests                   |
+| `npm run typecheck` | TypeScript, strict                         |
+| `npm run lint`      | Oxlint                                     |
+| `npm run verify:ui` | Browser verification — see below           |
+| `npm run shots`     | Re-captures the screenshots in this README |
 
 `verify:ui` runs against a server that is already up:
 
@@ -70,6 +84,14 @@ VERIFY_URL=http://localhost:5211/ npm run verify:ui
 ```
 
 Add `VERIFY_SHOTS=/some/dir` to save a full-page screenshot per viewport.
+
+The README screenshots are captured the same way, against the production
+preview so that what is shown is what ships:
+
+```bash
+npm run build && npm run preview -- --port 5212
+SHOT_URL=http://localhost:5212/ npm run shots
+```
 
 ## How it is put together
 
@@ -108,7 +130,7 @@ Measured on 2026-10-14, not assumed:
 
 | Check                                                | Result                                             |
 | ---------------------------------------------------- | -------------------------------------------------- |
-| `npm test`                                           | 73 passing — engine, CSV, store, interface states  |
+| `npm test`                                           | 77 passing — engine, CSV, store, interface states  |
 | `npm run typecheck`                                  | passes, `strict` and `noUncheckedIndexedAccess` on |
 | `npm run lint`                                       | passes                                             |
 | `npm run build`                                      | passes                                             |
@@ -120,14 +142,44 @@ Measured on 2026-10-14, not assumed:
 Not verified: real iOS and Android hardware (emulated widths only), screen
 reader software, and any deployed instance.
 
-## What it does not do
+## Deployment
 
-- It does not account for any specific tax regime, in Brazil or anywhere else,
-  and it does not replace accounting or tax advice.
+Not deployed. The build output in `dist/` is a static site with no server
+side, so any static host will serve it; nothing is published yet and no URL
+is claimed.
+
+## Limitations
+
+By design:
+
+- It does not account for any specific tax regime, in Brazil or anywhere
+  else, and it does not replace accounting or tax advice.
 - Switching currency relabels the figures. It does not convert between
   currencies, and the interface says so.
-- Nothing leaves the browser. There is no account, no server and no analytics;
-  saved calculations live in that browser's local storage and nowhere else.
+- Nothing leaves the browser. There is no account, no server and no
+  analytics; saved calculations live in that browser's local storage, do not
+  sync, and are deleted when site data is cleared.
+
+Not built yet:
+
+- No tax presets. Every rate is typed in by hand — shipping named presets
+  would mean sourcing real rates rather than inventing plausible ones.
+- One item at a time. No batch pricing, no spreadsheet import.
+- English only.
+
+Not tested:
+
+- Real iOS and Android hardware, and screen reader software.
+
+## Future work
+
+Documented, not simulated:
+
+- A Portuguese translation — the strings are already centralised in
+  `lib/i18n.ts`, so it is a second object rather than a refactor.
+- Batch pricing from a spreadsheet import.
+- Named tax presets per marketplace, once backed by sourced rate data.
+- Comparing two saved calculations side by side.
 
 ## Licence
 
