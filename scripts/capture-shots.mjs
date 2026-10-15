@@ -90,7 +90,7 @@ async function element(name, selector, { width = 1440, height = 900, prepare } =
   taken.push(`${OUT}/${name}.png  element: ${selector}`);
 }
 
-await element('panel-result', 'section.panel:has([data-testid="suggested-price"])');
+await element('panel-result', 'section.panel-deep');
 
 await element('panel-discount', 'section.panel:has(input[type=range])', {
   async prepare(page) {
