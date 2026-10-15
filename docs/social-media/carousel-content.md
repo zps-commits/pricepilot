@@ -4,9 +4,14 @@
 > The GitHub URL on slide 5 is still a placeholder — the repository has not
 > been created yet.
 
-Format: 1080 × 1350 (4:5). Light background, one accent, figures in a mono
-face, matching the application. No stock photography and no screenshot of an
-interface that does not exist.
+The finished slides are in `composed/`, rendered by `npm run social` at
+1080 × 1350 (4:5). To rebuild them as an editable Canva file, see
+`canva-spec.md`.
+
+The five pages follow the brief: presentation, problem, solution with real
+screenshots, technology, result. Light background, one accent, figures in a
+mono face, matching the application. No stock photography and no screenshot
+of an interface that does not exist.
 
 ---
 

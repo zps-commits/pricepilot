@@ -75,20 +75,17 @@ const BASE = `
 `;
 
 /*
- * One rule across every slide: the screen appears WHOLE. Nothing bleeds off
+ * The five slides the brief lays out: presentation, problem, solution with
+ * real screenshots, technology, result.
+ *
+ * One rule across all of them: the screen appears WHOLE. Nothing bleeds off
  * an edge, nothing is cropped. A giant fragment of interface reads as a
  * mistake; the product shown small and complete reads as the product.
  */
 const SLIDES = [
   {
-    name: '1-cover',
+    name: '1-presentation',
     html: `
-      <!--
-        A desktop capture is wide and short and can never fill a 4:5 frame
-        without being cropped. The phone screen is tall, so it fills the
-        height on its own and the text sits beside it. No dead zone, and
-        nothing cut.
-      -->
       <div class="frame" style="flex-direction:row; align-items:center; gap:56px; padding:0 84px">
         <div style="flex:1 1 0; min-width:0">
           <div class="eyebrow">Pricing tool</div>
@@ -106,56 +103,61 @@ const SLIDES = [
       </div>`,
   },
   {
-    name: '2-desktop-and-mobile',
+    name: '2-problem',
     html: `
-      <div class="frame">
-        <div class="pad">
-          <div class="eyebrow">One screen, every width</div>
-          <h2 style="margin-top:22px">Verified at 1440,<br>768, 390 and 320&nbsp;px</h2>
-        </div>
-        <!-- Centred in the space left over, rather than pushed to the
-             bottom: pushing collects all the air in one place. -->
-        <div style="flex:1; padding:0 84px; display:flex; align-items:center; gap:30px">
-          <div class="shot-wrap" style="flex:1 1 auto">
-            <img class="shot" src="${SHOTS}/desktop-result.png" alt="">
+      <div class="frame" style="justify-content:center; padding:0 84px">
+        <div class="eyebrow">The problem</div>
+        <h2 style="margin-top:22px; max-width:15ch">Two numbers that are not the same kind</h2>
+
+        <div style="margin-top:52px; display:grid; gap:24px">
+          <div style="background:${T.surface}; border:1px solid ${T.line}; border-radius:14px; padding:34px 38px">
+            <div class="eyebrow" style="color:${T.accent}">A cost</div>
+            <p style="margin-top:12px; font-size:30px; line-height:1.34">
+              An amount per unit. Ingredients, materials, the share of the
+              rent this sale has to carry.
+            </p>
           </div>
-          <div class="shot-wrap" style="flex:0 0 232px">
-            <img class="shot" src="${SHOTS}/mobile-form.png" alt="">
+          <div style="background:${T.surface}; border:1px solid ${T.line}; border-radius:14px; padding:34px 38px">
+            <div class="eyebrow" style="color:${T.accent}">A rate</div>
+            <p style="margin-top:12px; font-size:30px; line-height:1.34">
+              A percentage <strong>of the sale price</strong>. The card fee,
+              the marketplace commission, a tax on revenue.
+            </p>
           </div>
         </div>
-        <div class="foot" style="margin-top:0; padding-top:0">
-          <span>0 axe-core violations</span><span class="accent">WCAG 2.1 A + AA</span>
-        </div>
+
+        <p style="margin-top:44px; font-size:28px; line-height:1.4; color:${T.muted}; max-width:34ch">
+          A rate cannot be added to the cost before the price is known,
+          because it is a percentage of the answer.
+        </p>
       </div>`,
   },
   {
-    name: '3-features',
+    name: '3-solution',
     html: `
       <div class="frame">
         <div class="pad">
-          <div class="eyebrow">What it answers</div>
-          <h2 style="margin-top:22px">Four questions</h2>
+          <div class="eyebrow">The solution</div>
+          <h2 style="margin-top:22px">Four questions,<br>answered as you type</h2>
         </div>
-        <!-- Two columns, so neither the list nor the panel leaves a hole. -->
-        <div style="flex:1; display:flex; gap:48px; padding:40px 84px 84px; align-items:center">
+        <div style="flex:1; display:flex; gap:44px; padding:40px 84px 84px; align-items:center">
           <div style="flex:1 1 0; min-width:0">
             ${[
-              ['01', 'What should I charge to end up with the margin I want?'],
-              ['02', 'What is the lowest price that does not lose money?'],
-              ['03', 'What happens to the profit if I discount it?'],
-              ['04', 'What would the same costs look like at another margin?'],
+              ['01', 'The price that delivers the margin you want'],
+              ['02', 'The price below which you are paying to sell'],
+              ['03', 'What a discount does to the profit'],
+              ['04', 'The same costs at three different margins'],
             ]
               .map(
                 ([n, text]) => `
-              <div style="display:flex; gap:22px; padding:24px 0; border-bottom:1px solid ${T.line}">
+              <div style="display:flex; gap:22px; padding:28px 0; border-bottom:1px solid ${T.line}">
                 <span style="font-family:'Geist Mono',monospace; font-size:20px; color:${T.accent}; padding-top:5px">${n}</span>
                 <span style="font-size:29px; line-height:1.3">${text}</span>
               </div>`,
               )
               .join('')}
-            <p style="margin-top:36px; font-size:25px; line-height:1.44; color:${T.muted}">
+            <p style="margin-top:34px; font-size:24px; line-height:1.44; color:${T.muted}">
               At 45% off, an R$&nbsp;18,00 profit becomes an R$&nbsp;3,60 loss.
-              The slider says so while you are still deciding.
             </p>
           </div>
           <div class="shot-wrap" style="flex:0 0 440px">
@@ -165,35 +167,70 @@ const SLIDES = [
       </div>`,
   },
   {
-    name: '4-the-rule',
+    name: '4-technology',
     html: `
       <div class="frame" style="background:${T.ink}; color:${T.paper}">
         <div class="pad">
-          <div class="eyebrow" style="color:#9aa0a6">The decision that matters</div>
-          <h2 style="margin-top:24px; color:${T.paper}; max-width:14ch">
-            Prices round <span style="color:#79c8bb">up</span>. Never down.
-          </h2>
-          <p style="margin-top:34px; font-size:28px; line-height:1.42; color:#b9bec4; max-width:30ch">
-            Rounding down returns a price that delivers less margin than the
-            one you asked for. That is the single direction a pricing tool
-            must not err in.
+          <div class="eyebrow" style="color:#9aa0a6">The build</div>
+          <h2 style="margin-top:22px; color:${T.paper}">React 19 · TypeScript<br>Vite · Tailwind v4</h2>
+          <p style="margin-top:30px; font-size:26px; line-height:1.44; color:#b9bec4; max-width:34ch">
+            Money as integer cents, end to end. The engine is pure: input in,
+            result or <span style="font-family:'Geist Mono',monospace">null</span> out.
+            No React inside it, no formatting, no exceptions.
+          </p>
+          <p style="margin-top:26px; font-size:26px; line-height:1.44; color:#b9bec4; max-width:34ch">
+            <strong style="color:${T.paper}">The challenge actually faced:</strong>
+            the scaffold shipped with TypeScript strict turned off. The whole
+            engine was written under a compiler that was barely checking.
+            Turning it on surfaced real errors.
           </p>
         </div>
         <div style="margin-top:auto; padding:0 84px">
-          <!-- Verbatim from src/domain/pricing.ts, only re-wrapped to fit. -->
-          <div style="background:#202326; border:1px solid #2d3134; border-radius:14px; padding:38px 42px">
-            <pre style="font-family:'Geist Mono',monospace; font-size:23px; line-height:1.66; color:#d7dadd; white-space:pre"><span style="color:#79c8bb">function</span> ceilToCent(value: <span style="color:#79c8bb">number</span>): Cents {
-  <span style="color:#79c8bb">if</span> (!Number.isFinite(value) || value &lt;= <span style="color:#c9a227">0</span>) <span style="color:#79c8bb">return</span> <span style="color:#c9a227">0</span>;
-  <span style="color:#7e868d">// A float like 2399.9999999997 is 2400 in</span>
-  <span style="color:#7e868d">// intent; nudge before ceiling so binary</span>
-  <span style="color:#7e868d">// representation does not add a spurious cent.</span>
-  <span style="color:#79c8bb">const</span> corrected = Math.round(value * <span style="color:#c9a227">1e6</span>) / <span style="color:#c9a227">1e6</span>;
-  <span style="color:#79c8bb">return</span> Math.ceil(corrected);
-}</pre>
+          <div style="background:#202326; border:1px solid #2d3134; border-radius:14px; padding:34px 40px">
+            <pre style="font-family:'Geist Mono',monospace; font-size:22px; line-height:1.66; color:#d7dadd; white-space:pre"><span style="color:#7e868d">// Prices round up. Rounding down returns a price</span>
+<span style="color:#7e868d">// that delivers less margin than the one asked for.</span>
+suggestedPrice: ceilToCent(C / (<span style="color:#c9a227">1</span> - t - m))</pre>
           </div>
         </div>
         <div class="foot" style="color:#8b9197">
-          <span>Money as integer cents</span><span style="color:#79c8bb">pricepilot-eta.vercel.app</span>
+          <span>Business rules outside the components</span>
+        </div>
+      </div>`,
+  },
+  {
+    name: '5-result',
+    html: `
+      <div class="frame">
+        <div class="pad">
+          <div class="eyebrow">The result</div>
+          <h2 style="margin-top:22px">Built, verified,<br>and live</h2>
+        </div>
+        <div style="flex:1; display:flex; flex-direction:column; justify-content:center; padding:0 84px">
+          <dl style="border-top:1px solid ${T.line}">
+            ${[
+              ['Unit and component tests', '77 passing'],
+              ['TypeScript strict, lint, build', 'clean'],
+              ['axe-core, WCAG 2.1 A + AA', '0 violations'],
+              ['Widths checked', '1440 · 768 · 390 · 320'],
+            ]
+              .map(
+                ([k, v]) => `
+              <div style="display:flex; justify-content:space-between; gap:24px; padding:26px 0; border-bottom:1px solid ${T.line}">
+                <dt style="font-size:27px; color:${T.muted}">${k}</dt>
+                <dd style="font-family:'Geist Mono',monospace; font-size:27px; color:${T.accent}">${v}</dd>
+              </div>`,
+              )
+              .join('')}
+          </dl>
+          <p style="margin-top:34px; font-size:23px; line-height:1.45; color:${T.muted}; max-width:40ch">
+            A demonstration tool. It does not model any specific tax regime
+            and does not replace accounting advice. No users, no clients, no
+            revenue — the figures above are verification results.
+          </p>
+        </div>
+        <div class="foot">
+          <span class="accent" style="font-family:'Geist Mono',monospace">pricepilot-eta.vercel.app</span>
+          <span style="font-family:'Geist Mono',monospace">[GitHub URL pending]</span>
         </div>
       </div>`,
   },
