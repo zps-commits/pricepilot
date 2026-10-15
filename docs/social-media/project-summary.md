@@ -75,7 +75,7 @@ Not verified: real iOS and Android hardware, and screen reader software.
 ## Status
 
 Live at **https://pricepilot-eta.vercel.app**, deployed 2026-10-14.
-The GitHub repository has not been created yet.
+Source at **https://github.com/zps-commits/pricepilot**, public, 15 commits.
 
 ## Honesty notes for anyone reusing this summary
 

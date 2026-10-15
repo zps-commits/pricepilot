@@ -1,8 +1,8 @@
 # LinkedIn — post in English
 
-> **Before posting:** the deployment is live and verified (https://pricepilot-eta.vercel.app).
-> The GitHub repository **has not been created yet** — confirm the real URL
-> before posting, or drop that line. Do not publish a link that does not exist.
+> Links checked on 15 October 2026, both returning 200.
+> Demo: https://pricepilot-eta.vercel.app
+> Repository: https://github.com/zps-commits/pricepilot
 
 ---
 
@@ -87,7 +87,7 @@ Stack: React 19, TypeScript, Vite, Tailwind CSS v4, Vitest, Testing Library,
 Playwright + axe-core.
 
 Live: https://pricepilot-eta.vercel.app
-Code: [CONFIRM GITHUB URL BEFORE POSTING]
+Code: https://github.com/zps-commits/pricepilot
 
 If you price on top of a marketplace and want to compare notes, happy to talk.
 

@@ -89,5 +89,5 @@ Then the honesty paragraph, then the links.
 - Do not retouch a figure in a capture. If a number is wrong, fix the
   application and re-run `npm run shots`.
 - No gradients, no glow, no futurism, no generic template look.
-- The GitHub line on slide 5 is a placeholder until the repository exists.
-  Do not publish a link that 404s.
+- Both links on slide 5 are live and verified. Re-check them before posting
+  rather than assuming.

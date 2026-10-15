@@ -90,7 +90,7 @@ Money as integer cents. Prices round up, never down.
 77 tests. Zero axe-core violations at four screen widths.
 
 Try it: https://pricepilot-eta.vercel.app
-Code: [CONFIRM GITHUB URL]
+Code: https://github.com/zps-commits/pricepilot
 
 **Visual**
 Plain type. No logo wall, no badge row.

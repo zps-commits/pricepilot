@@ -230,7 +230,7 @@ suggestedPrice: ceilToCent(C / (<span style="color:#c9a227">1</span> - t - m))</
         </div>
         <div class="foot">
           <span class="accent" style="font-family:'Geist Mono',monospace">pricepilot-eta.vercel.app</span>
-          <span style="font-family:'Geist Mono',monospace">[GitHub URL pending]</span>
+          <span style="font-family:'Geist Mono',monospace">github.com/zps-commits/pricepilot</span>
         </div>
       </div>`,
   },
