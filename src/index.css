@@ -13,23 +13,36 @@
   --font-sans: 'Geist Variable', ui-sans-serif, system-ui, sans-serif;
   --font-mono: 'Geist Mono Variable', ui-monospace, 'SFMono-Regular', monospace;
 
-  /* Ground and structure. A near-neutral grey, no warm-craft beige. */
-  --color-paper: #f5f5f4;
+  /*
+   * Ground and structure. A paper with a faint teal cast rather than a
+   * neutral grey: the page reads as a made thing instead of a default.
+   */
+  --color-paper: #eceff0;
   --color-surface: #ffffff;
-  --color-line: #e3e3e0;
-  --color-line-strong: #c9c9c5;
+  --color-line: #dde3e2;
+  --color-line-strong: #b9c4c2;
 
-  /* Text. Both greys clear AA on paper and on surface. */
-  --color-ink: #17191b;
-  --color-muted: #55595f;
+  /* Text. Both clear AA on paper, on surface and on the tinted row. */
+  --color-ink: #15201f;
+  --color-muted: #4d5a58;
 
-  /* One accent: a deep teal. Used for the single primary figure and focus. */
-  --color-accent: #0e564f;
-  --color-accent-soft: #e7efed;
+  /*
+   * One accent, in four weights. The deep weight is a field the result sits
+   * in, not an outline — the single figure the tool exists to produce gets a
+   * solid plane of colour, and everything else stays quiet around it.
+   */
+  --color-accent: #0b5349;
+  --color-accent-deep: #083f38;
+  --color-accent-soft: #dcebe6;
+  --color-accent-bright: #8ee0cd;
+  --color-on-deep: #cfe4df;
+  --color-on-deep-dim: #a9ccc5;
+  /* Bad news on the deep field: the semantic red fails there, this clears AA. */
+  --color-on-deep-bad: #ffb3a8;
 
   /* Semantic, used only on numbers that are genuinely good or bad news. */
-  --color-positive: #1c6340;
-  --color-negative: #9d2f28;
+  --color-positive: #17603c;
+  --color-negative: #962a22;
 
   --radius-field: 0.5rem;
   --radius-panel: 0.75rem;
@@ -64,6 +77,14 @@ body {
 }
 
 /* Section headings inside the tool: small, uppercase, quiet. No numbering. */
+/* The inverted panel. Used once, for the figure the tool exists to produce. */
+@utility panel-deep {
+  background-color: var(--color-accent-deep);
+  border: 1px solid var(--color-accent-deep);
+  border-radius: var(--radius-panel);
+  color: var(--color-on-deep);
+}
+
 @utility section-title {
   font-size: 0.75rem;
   font-weight: 500;

@@ -67,7 +67,7 @@ export default function App() {
 
   return (
     <div className="min-h-dvh">
-      <header className="border-b border-line bg-surface">
+      <header className="border-b-2 border-accent bg-surface">
         <div className="mx-auto max-w-5xl px-5 py-6 sm:px-8">
           <h1 className="text-lg font-semibold tracking-tight">{t.appName}</h1>
           <p className="mt-1 max-w-prose text-sm text-muted">{t.tagline}</p>
@@ -126,11 +126,11 @@ export default function App() {
       {result ? (
         <div
           aria-hidden="true"
-          className="price-bar fixed inset-x-0 bottom-0 border-t border-line bg-surface/95 backdrop-blur-sm lg:hidden"
+          className="price-bar fixed inset-x-0 bottom-0 bg-accent-deep lg:hidden"
         >
           <div className="mx-auto flex max-w-5xl items-baseline justify-between gap-4 px-5 py-3.5 sm:px-8">
-            <span className="text-sm text-muted">{t.results.suggestedPrice}</span>
-            <span className="text-xl font-semibold text-accent">
+            <span className="text-sm text-on-deep-dim">{t.results.suggestedPrice}</span>
+            <span className="text-xl font-semibold text-accent-bright">
               {formatMoney(result.suggestedPrice, form.currency)}
             </span>
           </div>

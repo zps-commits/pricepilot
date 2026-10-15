@@ -74,24 +74,34 @@ const BASE = `
   .accent { color: ${T.accent}; }
 `;
 
+/*
+ * One rule across every slide: the screen appears WHOLE. Nothing bleeds off
+ * an edge, nothing is cropped. A giant fragment of interface reads as a
+ * mistake; the product shown small and complete reads as the product.
+ */
 const SLIDES = [
   {
     name: '1-cover',
     html: `
-      <div class="frame">
-        <div class="pad">
+      <!--
+        A desktop capture is wide and short and can never fill a 4:5 frame
+        without being cropped. The phone screen is tall, so it fills the
+        height on its own and the text sits beside it. No dead zone, and
+        nothing cut.
+      -->
+      <div class="frame" style="flex-direction:row; align-items:center; gap:56px; padding:0 84px">
+        <div style="flex:1 1 0; min-width:0">
           <div class="eyebrow">Pricing tool</div>
-          <h1 style="margin-top:28px">PricePilot</h1>
-          <p class="lede" style="margin-top:36px">
+          <h1 style="margin-top:22px; font-size:86px">PricePilot</h1>
+          <p class="lede" style="margin-top:28px; max-width:16ch">
             What to charge, once the fees have come off the price.
           </p>
-        </div>
-        <!-- Bleeds off the bottom edge: a crop of the frame, not of the
-             content. Everything the screen says stays legible. -->
-        <div style="margin-top:72px; padding-left:84px; overflow:hidden; flex:1">
-          <div class="shot-wrap" style="width:1200px">
-            <img class="shot" src="${SHOTS}/desktop-result.png" alt="">
+          <div style="margin-top:40px; font-family:'Geist Mono',monospace; font-size:20px; color:${T.accent}">
+            pricepilot-eta.vercel.app
           </div>
+        </div>
+        <div class="shot-wrap" style="flex:0 0 392px">
+          <img class="shot" src="${SHOTS}/mobile-form.png" alt="">
         </div>
       </div>`,
   },
@@ -100,18 +110,20 @@ const SLIDES = [
     html: `
       <div class="frame">
         <div class="pad">
-          <div class="eyebrow">One screen, two widths</div>
-          <h2 style="margin-top:24px">Verified at<br>1440 and 390&nbsp;px</h2>
+          <div class="eyebrow">One screen, every width</div>
+          <h2 style="margin-top:22px">Verified at 1440,<br>768, 390 and 320&nbsp;px</h2>
         </div>
-        <div style="position:relative; flex:1; margin-top:64px">
-          <div class="shot-wrap" style="position:absolute; left:84px; top:0; width:760px">
+        <!-- Centred in the space left over, rather than pushed to the
+             bottom: pushing collects all the air in one place. -->
+        <div style="flex:1; padding:0 84px; display:flex; align-items:center; gap:30px">
+          <div class="shot-wrap" style="flex:1 1 auto">
             <img class="shot" src="${SHOTS}/desktop-result.png" alt="">
           </div>
-          <div class="shot-wrap" style="position:absolute; right:60px; top:150px; width:300px">
+          <div class="shot-wrap" style="flex:0 0 232px">
             <img class="shot" src="${SHOTS}/mobile-form.png" alt="">
           </div>
         </div>
-        <div class="foot">
+        <div class="foot" style="margin-top:0; padding-top:0">
           <span>0 axe-core violations</span><span class="accent">WCAG 2.1 A + AA</span>
         </div>
       </div>`,
@@ -122,8 +134,11 @@ const SLIDES = [
       <div class="frame">
         <div class="pad">
           <div class="eyebrow">What it answers</div>
-          <h2 style="margin-top:24px">Four questions</h2>
-          <div style="margin-top:52px; display:grid; gap:0">
+          <h2 style="margin-top:22px">Four questions</h2>
+        </div>
+        <!-- Two columns, so neither the list nor the panel leaves a hole. -->
+        <div style="flex:1; display:flex; gap:48px; padding:40px 84px 84px; align-items:center">
+          <div style="flex:1 1 0; min-width:0">
             ${[
               ['01', 'What should I charge to end up with the margin I want?'],
               ['02', 'What is the lowest price that does not lose money?'],
@@ -132,31 +147,19 @@ const SLIDES = [
             ]
               .map(
                 ([n, text]) => `
-              <div style="display:flex; gap:28px; padding:26px 0; border-top:1px solid ${T.line}">
-                <span style="font-family:'Geist Mono',monospace; font-size:22px; color:${T.accent}; padding-top:6px">${n}</span>
-                <span style="font-size:30px; line-height:1.3">${text}</span>
+              <div style="display:flex; gap:22px; padding:24px 0; border-bottom:1px solid ${T.line}">
+                <span style="font-family:'Geist Mono',monospace; font-size:20px; color:${T.accent}; padding-top:5px">${n}</span>
+                <span style="font-size:29px; line-height:1.3">${text}</span>
               </div>`,
               )
               .join('')}
-          </div>
-        </div>
-        <!--
-          Cropped along the panel's own edge, never through a label. The
-          slice is the result column of the real screenshot at 45% off:
-          every figure in it is what the application produced.
-        -->
-        <div style="flex:1; position:relative; overflow:hidden; margin-top:40px">
-          <!-- The panel captured as an element, placed whole. Nothing is
-               cropped, so nothing can be cut mid-figure. -->
-          <div class="shot-wrap" style="position:absolute; right:84px; bottom:52px; width:430px">
-            <img class="shot" src="${SHOTS}/panel-discount.png" alt="">
-          </div>
-          <div style="position:absolute; left:84px; bottom:52px; width:420px">
-            <div class="eyebrow" style="color:${T.accent}">Question 03</div>
-            <p style="margin-top:16px; font-size:29px; line-height:1.3; color:${T.ink}">
+            <p style="margin-top:36px; font-size:25px; line-height:1.44; color:${T.muted}">
               At 45% off, an R$&nbsp;18,00 profit becomes an R$&nbsp;3,60 loss.
               The slider says so while you are still deciding.
             </p>
+          </div>
+          <div class="shot-wrap" style="flex:0 0 440px">
+            <img class="shot" src="${SHOTS}/panel-discount.png" alt="">
           </div>
         </div>
       </div>`,
@@ -167,20 +170,19 @@ const SLIDES = [
       <div class="frame" style="background:${T.ink}; color:${T.paper}">
         <div class="pad">
           <div class="eyebrow" style="color:#9aa0a6">The decision that matters</div>
-          <h2 style="margin-top:28px; color:${T.paper}; max-width:14ch">
+          <h2 style="margin-top:24px; color:${T.paper}; max-width:14ch">
             Prices round <span style="color:#79c8bb">up</span>. Never down.
           </h2>
-          <p style="margin-top:40px; font-size:30px; line-height:1.4; color:#b9bec4; max-width:24ch">
+          <p style="margin-top:34px; font-size:28px; line-height:1.42; color:#b9bec4; max-width:30ch">
             Rounding down returns a price that delivers less margin than the
             one you asked for. That is the single direction a pricing tool
             must not err in.
           </p>
         </div>
-        <div style="flex:1; display:flex; align-items:center; flex-direction:column; justify-content:center">
-        <!-- Verbatim from src/domain/pricing.ts, only re-wrapped to fit.
-             Not a mock-up and not a simplified stand-in. -->
-        <div style="margin:0 84px; align-self:stretch; background:#202326; border:1px solid #2d3134; border-radius:14px; padding:40px 44px">
-          <pre style="font-family:'Geist Mono',monospace; font-size:23px; line-height:1.66; color:#d7dadd; white-space:pre"><span style="color:#79c8bb">function</span> ceilToCent(value: <span style="color:#79c8bb">number</span>): Cents {
+        <div style="margin-top:auto; padding:0 84px">
+          <!-- Verbatim from src/domain/pricing.ts, only re-wrapped to fit. -->
+          <div style="background:#202326; border:1px solid #2d3134; border-radius:14px; padding:38px 42px">
+            <pre style="font-family:'Geist Mono',monospace; font-size:23px; line-height:1.66; color:#d7dadd; white-space:pre"><span style="color:#79c8bb">function</span> ceilToCent(value: <span style="color:#79c8bb">number</span>): Cents {
   <span style="color:#79c8bb">if</span> (!Number.isFinite(value) || value &lt;= <span style="color:#c9a227">0</span>) <span style="color:#79c8bb">return</span> <span style="color:#c9a227">0</span>;
   <span style="color:#7e868d">// A float like 2399.9999999997 is 2400 in</span>
   <span style="color:#7e868d">// intent; nudge before ceiling so binary</span>
@@ -188,7 +190,7 @@ const SLIDES = [
   <span style="color:#79c8bb">const</span> corrected = Math.round(value * <span style="color:#c9a227">1e6</span>) / <span style="color:#c9a227">1e6</span>;
   <span style="color:#79c8bb">return</span> Math.ceil(corrected);
 }</pre>
-        </div>
+          </div>
         </div>
         <div class="foot" style="color:#8b9197">
           <span>Money as integer cents</span><span style="color:#79c8bb">pricepilot-eta.vercel.app</span>

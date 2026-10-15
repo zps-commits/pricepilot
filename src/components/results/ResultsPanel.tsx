@@ -14,8 +14,15 @@ function Row({
   value: string;
   tone?: 'neutral' | 'positive' | 'negative';
 }) {
+  /* On the deep field the semantic greens and reds would fail contrast, so
+     good news is the bright accent and bad news is a light red that clears
+     AA against it. Neutral figures are plain white. */
   const toneClass =
-    tone === 'positive' ? 'text-positive' : tone === 'negative' ? 'text-negative' : 'text-ink';
+    tone === 'positive'
+      ? 'text-accent-bright'
+      : tone === 'negative'
+        ? 'text-on-deep-bad'
+        : 'text-white';
 
   return (
     /*
@@ -27,7 +34,7 @@ function Row({
      * broken definition list.
      */
     <div className="flex items-baseline justify-between gap-4 py-2.5">
-      <dt className="min-w-0 text-sm text-muted">
+      <dt className="min-w-0 text-sm text-on-deep-dim">
         {label}
         {hint ? <span className="mt-0.5 block text-xs leading-snug">{hint}</span> : null}
       </dt>
@@ -51,38 +58,38 @@ export default function ResultsPanel({
   const { currency } = input;
 
   return (
-    <section className="panel p-5 sm:p-6" aria-live="polite">
-      <h2 className="section-title">{t.results.legend}</h2>
+    <section className="panel-deep p-5 sm:p-6" aria-live="polite">
+      <h2 className="section-title text-on-deep-dim">{t.results.legend}</h2>
 
       {problems.length > 0 ? (
-        <div className="mt-4 rounded-field border border-negative/30 bg-negative/5 p-4">
+        <div className="mt-4 rounded-field border border-white/25 bg-white/10 p-4">
           {problems.map((problem) => (
             <p
               key={problem.code}
               data-testid="engine-problem"
-              className="text-sm leading-relaxed text-negative"
+              className="text-sm leading-relaxed text-white"
             >
               {problem.message}
             </p>
           ))}
         </div>
       ) : !priceable || !result ? (
-        <p className="mt-4 text-sm text-muted">{t.results.empty}</p>
+        <p className="mt-4 text-sm text-on-deep-dim">{t.results.empty}</p>
       ) : (
         <>
           {/* The one figure the whole tool exists to produce, sized to say so. */}
           <div className="mt-4">
-            <div className="text-sm text-muted">{t.results.suggestedPrice}</div>
+            <div className="text-sm text-on-deep-dim">{t.results.suggestedPrice}</div>
             <div
               data-testid="suggested-price"
-              className="mt-1 text-4xl font-semibold leading-none tracking-tight text-accent sm:text-5xl"
+              className="mt-1 text-4xl font-semibold leading-none tracking-tight text-accent-bright sm:text-5xl"
             >
               {formatMoney(result.suggestedPrice, currency)}
             </div>
-            {input.name ? <p className="mt-2 text-sm text-muted">{input.name}</p> : null}
+            {input.name ? <p className="mt-2 text-sm text-on-deep-dim">{input.name}</p> : null}
           </div>
 
-          <dl className="mt-6 divide-y divide-line border-t border-line">
+          <dl className="mt-6 divide-y divide-white/15 border-t border-white/15">
             <Row
               label={t.results.totalCost}
               value={formatMoney(result.totalCost, currency)}

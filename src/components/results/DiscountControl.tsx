@@ -29,7 +29,7 @@ export default function DiscountControl({
   const id = useId();
 
   return (
-    <section className="panel mt-6 p-5 sm:p-6">
+    <section className="panel mt-6 bg-accent-soft p-5 sm:p-6">
       <h2 className="section-title">{t.discount.legend}</h2>
 
       <div className="mt-4 flex items-center gap-4">
@@ -44,7 +44,7 @@ export default function DiscountControl({
           step={1}
           value={value}
           onChange={(event) => onChange(Number(event.target.value))}
-          className="h-1.5 w-full cursor-pointer accent-accent"
+          className="h-1.5 w-full cursor-pointer accent-accent-deep"
         />
         {/* A visual echo of the slider, which announces its own value. Left
             out of the accessibility tree so the figure is not read twice. */}
